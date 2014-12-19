@@ -60,7 +60,7 @@ def test_img_url(url):
 def image_url(isbn, upc):
     img_link = None
     if not isbn == None:
-        img_link = test_img_url("http://www.syndetics.com/index.aspx?isbn=%s/LC.GIF&client=skopl" % isbn)
+        img_link = test_img_url("http://www.syndetics.com/index.aspx?isbn=%s/MC.GIF&client=skopl" % isbn)
     if not img_link and not upc == None:
         img_link = test_img_url("http://plus.syndetics.com/index.php?isbn=/lc.gif&client=skopl&upc=%s" % upc)
     return img_link
@@ -81,9 +81,9 @@ def write_rss(cursor, filename, title, q):
     for r in rows:
         link = "http://encore.skokielibrary.info/iii/encore/record/C__Rb%s" % r[0]
         item = PyRSS2Gen.RSSItem(
-            title = "%s / %s" % (r[1], r[2]) if r[2] and len(r[2]) > 0 else r[1],
+            title = "%s" % (r[1]),
             link = link,
-            description = """<div class="feed-item"><div class="item-image"><img src="%s"></div><div class="item-title"><a href="%s">%s</a></div><p class="item-description">%s</p></div>""" % (image_url(r[3], r[4]),link,r[1], trim_summary(r[5], link) if r[5] else get_summary(r[3], r[4]),),
+            description = """<img src="%s" alt="%s">""" % (image_url(r[3], r[4]),r[1],),
             )
         rss.items.append(item)
 
