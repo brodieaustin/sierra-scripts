@@ -2,7 +2,9 @@
 *.pyc
 .DS_Store
 *.json
-settings.py
 *.csv
 *.txt
 *.xml
+
+settings.py
+local_settings.py
