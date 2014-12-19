@@ -21,9 +21,9 @@ from settings import *
 from queries import *
 
 def trim_summary(summary, url):
-    last_space = summary.rfind(" ", 498)
+    last_space = summary.rfind(". ", 120, 200)
     if last_space > -1:
-        return summary[:last_space] + ("... <a href='%s'>read more</a>" % url)
+        return summary[:last_space] + (" ...")
     return summary
 
 def read_summary(url):
@@ -60,9 +60,9 @@ def test_img_url(url):
 def image_url(isbn, upc):
     img_link = None
     if not isbn == None:
-        img_link = test_img_url("http://www.syndetics.com/index.aspx?isbn=%s/SC.GIF&client=skopl" % isbn)
+        img_link = test_img_url("http://www.syndetics.com/index.aspx?isbn=%s/LC.GIF&client=skopl" % isbn)
     if not img_link and not upc == None:
-        img_link = test_img_url("http://plus.syndetics.com/index.php?isbn=/sc.gif&client=skopl&upc=%s" % upc)
+        img_link = test_img_url("http://plus.syndetics.com/index.php?isbn=/lc.gif&client=skopl&upc=%s" % upc)
     return img_link
 
 def write_rss(cursor, filename, title, q):
@@ -83,7 +83,7 @@ def write_rss(cursor, filename, title, q):
         item = PyRSS2Gen.RSSItem(
             title = "%s / %s" % (r[1], r[2]) if r[2] and len(r[2]) > 0 else r[1],
             link = link,
-            description = """<p><img src="%s" align="left" style="margin: 5px;">%s</p>""" % (image_url(r[3], r[4]), trim_summary(r[5], link) if r[5] else get_summary(r[3], r[4]),),
+            description = """<div class="feed-item"><div class="item-image"><img src="%s"></div><div class="item-title"><a href="%s">%s</a></div><p class="item-description">%s</p></div>""" % (image_url(r[3], r[4]),link,r[1], trim_summary(r[5], link) if r[5] else get_summary(r[3], r[4]),),
             )
         rss.items.append(item)
 
@@ -106,4 +106,3 @@ for f in feeds:
 
 cursor.close()
 conn.close()
-
